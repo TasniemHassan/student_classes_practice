@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Test {
     public static void main(String[] args) {
 
@@ -22,5 +25,55 @@ public class Test {
         Print how many students are MathStudent with message -> "Math students = {numberOfMathStudents}"
         Print how many students are ScienceStudent with message -> "Science students = {numberOfScienceStudents}"
          */
+        ArrayList<Student> students = new ArrayList<>();
+        int count = 0;
+        Scanner input = new Scanner(System.in);
+        do {
+            System.out.println(UserQuestions.askToJoin);
+            if (!input.nextLine().equalsIgnoreCase("Y")) continue;
+
+            System.out.println(UserQuestions.askFirstName);
+            String firstName = input.nextLine();
+
+            System.out.println(UserQuestions.askLastName);
+            String lastName = input.nextLine();
+
+            System.out.println(UserQuestions.askAge);
+            int age = input.nextInt();
+            input.nextLine();
+            try {
+                Permission.checkAge(age);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            System.out.println(UserQuestions.askGender);
+            String gender = input.nextLine();
+
+            System.out.println(UserQuestions.askClassName);
+            String className = input.nextLine();
+            try {
+                Permission.checkClassName(className);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+            System.out.println("Congratulations! You are registered for " + className + " class.");
+
+            if (className.equalsIgnoreCase("Math")) students.add(new MathStudent(firstName, lastName, age, gender, className));
+            else students.add(new ScienceStudent(firstName, lastName, age, gender, className));
+
+            count++;
+        } while (count < 3);
+
+        int totalMathStudents = (int) students.stream().filter(cName -> cName.getClassName().equalsIgnoreCase("Math")).count();
+        int totalScienceStudents = (int) students.stream().filter(cName -> cName.getClassName().equalsIgnoreCase("Science")).count();
+
+        for (Student student : students) {
+            System.out.println("\n" + student);
+        }
+        System.out.println("\nMath students = " + totalMathStudents );
+        System.out.println("\nScience students = " + totalScienceStudents);
     }
 }
